@@ -157,10 +157,10 @@ jobs:
       # If we merged to webspark-upstream's master, it would be immediately 
       # available, so we merge to webspark-rc branch.
       #=======================================================================
-      run: |
-        if [ "$CIRCLE_BRANCH" != 'master' ]; then
-            circleci-agent step halt
-        fi
+      - run: |
+          if [ "$CIRCLE_BRANCH" != 'master' ]; then
+              circleci-agent step halt
+          fi
 
       - run:
           name: clone webspark-upstream
