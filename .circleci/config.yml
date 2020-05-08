@@ -183,7 +183,7 @@ jobs:
 
       - run:
           name: merge updates but don't commit yet
-          command: git merge --no-commit pantheon-drops-8/master
+          command: git merge --no-commit --allow-unrelated-histories pantheon-drops-8/master
 
       - run:
           name: rsync Composer built files into place
