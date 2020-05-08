@@ -145,6 +145,60 @@ jobs:
           name: deploy to Pantheon
           command: ./.ci/deploy/pantheon/dev-multidev
 
+      #=======================================================================
+      # webspark-upstream updates:
+      # Checkout the Webspark upstream, merge the Pantheon upstream
+      # to get the newest Pantheon Drupal) and then copy our built
+      # code into the codebase, commit and push to the Webspark Release
+      # Candidate branch.
+      # End this job if we're NOT executing on the default (master) branch.
+      # We only merge to webspark-upstream repo's webspark-rc branch
+      # for builds of webspark-source repo's master branch.
+      # If we merged to webspark-upstream's master, it would be immediately 
+      # available, so we merge to webspark-rc branch.
+      #=======================================================================
+      - run: |
+          if [ "$CIRCLE_BRANCH" != 'master' ]; then
+              circleci-agent step halt
+              echo "asu halting"
+          fi
+
+      - run:
+          name: clone webspark-upstream
+          command: git clone https://github.com/Apps-and-Design/webspark-upstream.git ./webspark-upstream
+
+      - run: cd webspark-upstream
+
+      - run:
+          name: checkout webspark-rc staging branch
+          command: git checkout -b webspark-rc
+
+      - run:
+          name: pull in Pantheon updates from Pantheon upstream
+          command: git fetch pantheon-drops-8
+
+      - run:
+          name: merge updates but don't commit yet
+          command: git merge --no-commit pantheon-drops-8/master
+
+      - run:
+          name: rsync Composer built files into place
+          command: rsync -rz /tmp/vendor /tmp/modules /tmp/profiles /tmp/themes /tmp/drush ./webspark-upstream
+
+      - run: | 
+          git add --all
+          git commit -am "CircleCI Upstream Merge - $CIRCLE_BRANCH - $CIRCLE_BUILD_NUM - $CIRCLE_USERNAME"
+          git push
+
+      #=======================================================================
+      # TODO Consider automating the following with an approval gateway...
+      # When ready to do release, merge webspark-rc to master via GitHub UI
+      # OR do the following on the commandline:
+      # git checkout master
+      # git merge --no-ff webspark-rc
+      # git push origin master
+      #=======================================================================
+
   behat_test:
     <<: *defaults
     steps:
