@@ -146,7 +146,7 @@ jobs:
           command: ./.ci/deploy/pantheon/dev-multidev
 
       #=======================================================================
-      # webspark-upstream updates:
+      # ASU webspark-upstream updates:
       # Checkout the Webspark upstream, merge the Pantheon upstream
       # to get the newest Pantheon Drupal) and then copy our built
       # code into the codebase, commit and push to the Webspark Release
@@ -168,6 +168,10 @@ jobs:
           command: git clone https://github.com/Apps-and-Design/webspark-upstream.git ./webspark-upstream
 
       - run: cd webspark-upstream
+      
+      - run: 
+          name: add the Drupal 8 Pantheon upstream as a remote
+          command: git remote add pantheon-drops-8 git://github.com/pantheon-systems/drops-8.git
 
       - run:
           name: checkout webspark-rc staging branch
