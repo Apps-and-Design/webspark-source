@@ -178,8 +178,12 @@ jobs:
           command: git checkout -b webspark-rc
 
       - run:
-          name: pull in Pantheon updates from Pantheon upstream
+          name: fetch Pantheon updates from Pantheon upstream
           command: git fetch pantheon-drops-8
+
+      - run:
+          name: pull in Pantheon updates from Pantheon upstream master
+          command: git pull pantheon-drops-8 master
 
       - run:
           name: merge updates but don't commit yet
