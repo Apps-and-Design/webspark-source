@@ -182,12 +182,12 @@ jobs:
           command: git fetch pantheon-drops-8
 
       - run:
-          name: pull in Pantheon updates from Pantheon upstream master
-          command: git pull --allow-unrelated-histories pantheon-drops-8 master
+          name: pull in Pantheon updates from Pantheon upstream default
+          command: git pull --allow-unrelated-histories pantheon-drops-8 default
 
       - run:
           name: merge updates but don't commit yet
-          command: git merge --no-commit --allow-unrelated-histories pantheon-drops-8/master
+          command: git merge --no-commit --allow-unrelated-histories pantheon-drops-8/default
 
       - run:
           name: rsync Composer built files into place
