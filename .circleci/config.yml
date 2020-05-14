@@ -183,7 +183,7 @@ jobs:
 
       - run:
           name: pull in Pantheon updates from Pantheon upstream master
-          command: git pull pantheon-drops-8 master
+          command: git pull --allow-unrelated-histories pantheon-drops-8 master
 
       - run:
           name: merge updates but don't commit yet
