@@ -2,38 +2,6 @@
 
 set -eo pipefail
 
-#
-# This script checks out the webspark-upstream
-# Steps:
-# Checkout the Webspark upstream, merge the Pantheon upstream
-# to get the newest Pantheon Drupal) and then copy our built
-# code into the codebase, commit and push to the Webspark Release
-# Candidate (webspark-rc) branch.
-#
-
-# Clone webspark-upstream
-git clone https://github.com/Apps-and-Design/webspark-upstream.git ./webspark-upstream
-
-cd webspark-upstream
-      
-# Add the Drupal 8 Pantheon upstream as a remote
-git remote add pantheon-drops-8 git://github.com/pantheon-systems/drops-8.git
-
-# Checkout webspark-rc staging branch
-git checkout -b webspark-rc
-
-# Fetch Pantheon updates from Pantheon upstream
-git fetch pantheon-drops-8
-
-# Reset current branch (webspark-rc) to origin's master (else we get conflicts)
-git reset --hard pantheon-drops-8/master
-
-# Pull in Pantheon updates from Pantheon upstream master
-git pull --allow-unrelated-histories pantheon-drops-8 master
-
-# Merge updates but don't commit yet
-git merge --no-commit --allow-unrelated-histories pantheon-drops-8/master
-
 # Rsync Composer built directories into place (if they exist)
 for dir in /tmp/vendor /tmp/modules /tmp/profiles /tmp/themes /tmp/drush
 do
@@ -44,16 +12,3 @@ do
     fi
 done
 # WAS: rsync -rz /tmp/vendor /tmp/modules /tmp/profiles /tmp/themes /tmp/drush ./webspark-upstream
-
-git add --all
-git commit -am "CircleCI Upstream Merge - $CIRCLE_BRANCH - $CIRCLE_BUILD_NUM - $CIRCLE_USERNAME"
-git push
-
-#=======================================================================
-# TODO Consider automating the following with an approval gateway...
-# When ready to do release, merge webspark-rc to master via GitHub UI
-# OR do the following on the commandline:
-# git checkout master
-# git merge --no-ff webspark-rc
-# git push origin master
-#=======================================================================

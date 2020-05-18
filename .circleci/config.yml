@@ -146,28 +146,60 @@ jobs:
           command: ./.ci/deploy/pantheon/dev-multidev
 
       #=======================================================================
-      # ASU webspark-upstream merge to webspark-rc branch.
-      # Commands run within script and do the following:
+      # ASU webspark-upstream updates:
       # Checkout the Webspark upstream, merge the Pantheon upstream
       # to get the newest Pantheon Drupal) and then copy our built
       # code into the codebase, commit and push to the Webspark Release
-      # Candidate branch. Before that, though, we end this job if we're NOT 
-      # executing on the default (master) branch.
+      # Candidate branch.
+      # End this job if we're NOT executing on the default (master) branch.
       # We only merge to webspark-upstream repo's webspark-rc branch
       # for builds of webspark-source repo's master branch.
       # If we merged to webspark-upstream's master, it would be immediately 
       # available, so we merge to webspark-rc branch.
       #=======================================================================
-
       - run: |
           if [ "$CIRCLE_BRANCH" != 'master' ]; then
               circleci-agent step halt
               echo "asu halting"
           fi
+      - run:
+          name: clone webspark-upstream
+          command: git clone https://github.com/Apps-and-Design/webspark-upstream.git ./webspark-upstream
+
+      - run: cd webspark-upstream
+      
+      - run: 
+          name: add the Drupal 8 Pantheon upstream as a remote
+          command: git remote add pantheon-drops-8 git://github.com/pantheon-systems/drops-8.git
 
       - run:
-          name: merge updates to webspark-upstream webspark-rc branch
+          name: checkout webspark-rc staging branch
+          command: git checkout -b webspark-rc
+
+      - run:
+          name: fetch Pantheon updates from Pantheon upstream
+          command: git fetch pantheon-drops-8
+
+      # reset current branch (webspark-rc) to origin's master
+      - run: git reset --hard pantheon-drops-8/master
+
+      - run:
+          name: pull in Pantheon updates from Pantheon upstream master
+          command: git pull --allow-unrelated-histories pantheon-drops-8 master
+
+      - run:
+          name: merge updates but don't commit yet
+          command: git merge --no-commit --allow-unrelated-histories pantheon-drops-8/master
+
+      # Do rsync in bash script in order to handle logic needed. 
+      - run:
+          name: rsync Composer built files into place
           command: bash ./.ci/deploy/asu/webspark-upstream
+
+      - run: | 
+          git add --all
+          git commit -am "CircleCI Upstream Merge - $CIRCLE_BRANCH - $CIRCLE_BUILD_NUM - $CIRCLE_USERNAME"
+          git push
 
       #=======================================================================
       # When ready to do release, merge webspark-rc to master via GitHub UI
