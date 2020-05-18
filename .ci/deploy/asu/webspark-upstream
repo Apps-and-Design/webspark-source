@@ -1,6 +1,14 @@
 #!/bin/bash
 
 #set -eo pipefail
+echo "pwd"
+pwd
+
+echo "ls -la"
+ls -la
+
+echo "ls -la /tmp"
+ls -la /tmp
 
 # Rsync Composer built directories into place (if they exist)
 for dir in /tmp/vendor /tmp/modules /tmp/profiles /tmp/themes /tmp/drush
