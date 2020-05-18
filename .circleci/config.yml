@@ -167,7 +167,7 @@ jobs:
 
       - run:
           name: merge updates to webspark-upstream webspark-rc branch
-          command: ./.ci/deploy/asu/webspark-upstream
+          command: bash ./.ci/deploy/asu/webspark-upstream
 
       #=======================================================================
       # When ready to do release, merge webspark-rc to master via GitHub UI
