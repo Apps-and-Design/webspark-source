@@ -162,6 +162,10 @@ jobs:
               circleci-agent step halt
               echo "asu halting"
           fi
+
+      # Need to do this in a separate directory.
+      - run: cd ~
+
       - run:
           name: clone webspark-upstream
           command: git clone https://github.com/Apps-and-Design/webspark-upstream.git ./webspark-upstream
