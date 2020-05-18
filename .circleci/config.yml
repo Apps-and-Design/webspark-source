@@ -191,10 +191,14 @@ jobs:
           name: merge updates but don't commit yet
           command: git merge --no-commit --allow-unrelated-histories pantheon-drops-8/master
 
+      - run: pwd
+
+      - run: ls -la
+
       # Do rsync in bash script in order to handle logic needed. 
       - run:
           name: rsync Composer built files into place
-          command: bash ./.ci/deploy/asu/webspark-upstream
+          command: bash ../.ci/deploy/asu/webspark-upstream
 
       - run: | 
           git add --all
