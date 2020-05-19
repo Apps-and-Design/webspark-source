@@ -206,6 +206,8 @@ jobs:
               fi
           done
 
+      - run: git remote show origin
+
       # Do rsync in bash script in order to handle logic needed. 
       #- run:
       #    name: rsync Composer built files into place
@@ -214,7 +216,9 @@ jobs:
       - run: | 
           git add --all
           git commit -am "CircleCI Upstream Merge - $CIRCLE_BRANCH - $CIRCLE_BUILD_NUM - $CIRCLE_USERNAME"
-          git push
+          git push --set-upstream origin webspark-rc
+
+      #    git push
 
       #=======================================================================
       # When ready to do release, merge webspark-rc to master via GitHub UI
