@@ -172,28 +172,29 @@ jobs:
 
       - run: cd webspark-upstream
       
-      - run: 
-          name: add the Drupal 8 Pantheon upstream as a remote
-          command: git remote add pantheon-drops-8 git://github.com/pantheon-systems/drops-8.git
-
       - run:
           name: checkout webspark-rc staging branch
           command: git checkout -b webspark-rc
 
       - run:
-          name: fetch Pantheon updates from Pantheon upstream
-          command: git fetch pantheon-drops-8
+          name: set to the default branch of the drops-8
+          command: git checkout -b default
 
-      # reset current branch (webspark-rc) to origin's master
-      - run: git reset --hard pantheon-drops-8/master
-
-      - run:
-          name: pull in Pantheon updates from Pantheon upstream master
-          command: git pull --allow-unrelated-histories pantheon-drops-8 master
+      - run: 
+          name: add the Drupal 8 Pantheon upstream as a remote
+          command: git remote add pantheon-drops-8 git://github.com/pantheon-systems/drops-8.git
 
       - run:
-          name: merge updates but don't commit yet
-          command: git merge --no-commit --allow-unrelated-histories pantheon-drops-8/master
+          name: pull in Pantheon Updates and merge, using -Xtheirs (remote takes precedence over local in case of a conflict)
+          command: git pull -X theirs pantheon-drops-8 default
+
+      - run: 
+          name: check out webspark-rc branch
+          command: git checkout webspark-rc
+
+      - run:
+          name: merge updates but do not commit yet
+          command: git merge --no-commit default
 
       # Rsync Composer built directories into place (if they exist)
       - run: |
@@ -205,8 +206,6 @@ jobs:
                   rsync -rz ${dir} ./webspark-upstream
               fi
           done
-
-      - run: git remote show origin
 
       # Do rsync in bash script in order to handle logic needed. 
       #- run:
