@@ -163,6 +163,11 @@ jobs:
               echo "asu halting"
           fi
 
+      # Add CircleCI RW deploy key so we can push to webspark-source repo.
+      - add_ssh_keys:
+          fingerprints:
+            - "c3:77:0e:b2:a2:ac:da:14:07:50:7f:d9:a4:c1:29:e4"
+            
       # Need to do this in a separate directory.
       - run: cd ~
 
@@ -212,7 +217,9 @@ jobs:
       #    name: rsync Composer built files into place
       #    command: bash ../.ci/deploy/asu/webspark-upstream
 
-      - run: | 
+      - run: |
+          git config user.email "mlsamuelson@gmail.com"
+          git config user.name "CircleCI Job"
           git add --all
           git commit -am "CircleCI Upstream Merge - $CIRCLE_BRANCH - $CIRCLE_BUILD_NUM - $CIRCLE_USERNAME"
           git push --set-upstream origin webspark-rc
