@@ -186,7 +186,7 @@ jobs:
 
       - run:
           name: pull in Pantheon Updates and merge, using -Xtheirs (remote takes precedence over local in case of a conflict)
-          command: git pull --allow-unrelated-histories -X theirs pantheon-drops-8 default
+          command: git pull --allow-unrelated-histories --no-edit -X theirs pantheon-drops-8 default
 
       - run: 
           name: check out webspark-rc branch
