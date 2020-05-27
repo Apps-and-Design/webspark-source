@@ -201,9 +201,12 @@ jobs:
           name: merge updates but do not commit yet
           command: git merge --no-commit default
 
-      # Rsync Composer built directories into place (if they exist)
+      # Rsync Composer built directories into place (if they exist).
+      # /tmp/web contains modules/, profiles/, and themes/ and they 
+      # need to be synced to root so we sync the contents of /tmp/web/, 
+      # not the folder.
       - run: |
-          for dir in /tmp/vendor /tmp/modules /tmp/profiles /tmp/themes /tmp/drush
+          for dir in /tmp/vendor /tmp/drush /tmp/web/
           do
               DIR="$dir"
               # If directory is not empty, rsync it.
@@ -218,7 +221,7 @@ jobs:
       #    command: bash ../.ci/deploy/asu/webspark-upstream
 
       - run: |
-          git config user.email "mlsamuelson@gmail.com"
+          git config user.email "mlsamuel@asu.edu"
           git config user.name "CircleCI Job"
           git add --all
           git commit -am "CircleCI Upstream Merge - $CIRCLE_BRANCH - $CIRCLE_BUILD_NUM - $CIRCLE_USERNAME"
