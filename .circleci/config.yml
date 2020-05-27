@@ -157,19 +157,28 @@ jobs:
       # If we merged to webspark-upstream's master, it would be immediately 
       # available, so we merge to webspark-rc branch.
       #=======================================================================
+  commit_to_webspark_upstream:
+    <<: *defaults
+    steps:
+
+      # Halt if we're not building webspark-source master.
       - run: |
           if [ "$CIRCLE_BRANCH" != 'master' ]; then
               circleci-agent step halt
               echo "asu halting"
           fi
 
-      # Add CircleCI RW deploy key so we can push to webspark-source repo.
+      # Attach the workspace with built directories.
+      - attach_workspace:
+          at: /tmp
+
+      # Add CircleCI RW deploy key so we can push to webspark-upstream repo.
       - add_ssh_keys:
           fingerprints:
             - "c3:77:0e:b2:a2:ac:da:14:07:50:7f:d9:a4:c1:29:e4"
             
       # Need to do this in a separate directory.
-      - run: cd ~
+      #- run: cd ~
 
       - run:
           name: clone webspark-upstream
