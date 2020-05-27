@@ -145,18 +145,18 @@ jobs:
           name: deploy to Pantheon
           command: ./.ci/deploy/pantheon/dev-multidev
 
-      #=======================================================================
-      # ASU webspark-upstream updates:
-      # Checkout the Webspark upstream, merge the Pantheon upstream
-      # to get the newest Pantheon Drupal) and then copy our built
-      # code into the codebase, commit and push to the Webspark Release
-      # Candidate branch.
-      # End this job if we're NOT executing on the default (master) branch.
-      # We only merge to webspark-upstream repo's webspark-rc branch
-      # for builds of webspark-source repo's master branch.
-      # If we merged to webspark-upstream's master, it would be immediately 
-      # available, so we merge to webspark-rc branch.
-      #=======================================================================
+  #=======================================================================
+  # ASU webspark-upstream updates:
+  # Checkout the Webspark upstream, merge the Pantheon upstream
+  # to get the newest Pantheon Drupal) and then copy our built
+  # code into the codebase, commit and push to the Webspark Release
+  # Candidate branch.
+  # End this job if we're NOT executing on the default (master) branch.
+  # We only merge to webspark-upstream repo's webspark-rc branch
+  # for builds of webspark-source repo's master branch.
+  # If we merged to webspark-upstream's master, it would be immediately 
+  # available, so we merge to webspark-rc branch.
+  #=======================================================================
   commit_to_webspark_upstream:
     <<: *defaults
     steps:
@@ -346,6 +346,9 @@ workflows:
           requires:
             - static_tests
             - build_php
+      - commit_to_webspark_upstream:
+          requires:
+            - deploy_to_pantheon
       - visual_regression_test:
           requires:
             - configure_env_vars
