@@ -172,6 +172,18 @@ jobs:
       - attach_workspace:
           at: /tmp
 
+
+      - store_artifacts:
+          path: /tmp/vendor
+          destination: artifact-vendor
+      - store_artifacts:
+          path: /tmp/drush
+          destination: artifact-drush
+      - store_artifacts:
+          path: /tmp/web
+          destination: artifact-web
+
+
       # Add CircleCI RW deploy key so we can push to webspark-upstream repo.
       - add_ssh_keys:
           fingerprints:
@@ -180,65 +192,61 @@ jobs:
       # Need to do this in a separate directory.
       #- run: cd ~
 
-      - run:
-          name: clone webspark-upstream
-          command: git clone https://github.com/Apps-and-Design/webspark-upstream.git ~/webspark-upstream
+      ##- run:
+      ##    name: clone webspark-upstream
+      ##    command: git clone https://github.com/Apps-and-Design/webspark-upstream.git ~/webspark-upstream
 
-      - run: ls
+      ##- run: cd ~/webspark-upstream
       
-      - run: pwd
+      ##- run:
+      ##    name: checkout webspark-rc staging branch
+      ##    command: git checkout -b webspark-rc
 
-      - run: cd ~/webspark-upstream
-      
-      - run:
-          name: checkout webspark-rc staging branch
-          command: git checkout -b webspark-rc
+      ##- run:
+      ##    name: set to the default branch of the drops-8
+      ##    command: git checkout -b default
 
-      - run:
-          name: set to the default branch of the drops-8
-          command: git checkout -b default
+      ##- run: 
+      ##    name: add the Drupal 8 Pantheon upstream as a remote
+      ##    command: git remote add pantheon-drops-8 git://github.com/pantheon-systems/drops-8.git
 
-      - run: 
-          name: add the Drupal 8 Pantheon upstream as a remote
-          command: git remote add pantheon-drops-8 git://github.com/pantheon-systems/drops-8.git
+      ##- run:
+      ##    name: pull in Pantheon Updates and merge, using -Xtheirs (remote takes precedence over local in case of a conflict)
+      ##    command: git pull --allow-unrelated-histories --no-edit -X theirs pantheon-drops-8 default
 
-      - run:
-          name: pull in Pantheon Updates and merge, using -Xtheirs (remote takes precedence over local in case of a conflict)
-          command: git pull --allow-unrelated-histories --no-edit -X theirs pantheon-drops-8 default
+      ##- run: 
+      ##    name: check out webspark-rc branch
+      ##    command: git checkout webspark-rc
 
-      - run: 
-          name: check out webspark-rc branch
-          command: git checkout webspark-rc
-
-      - run:
-          name: merge updates but do not commit yet
-          command: git merge --no-commit default
+      ##- run:
+      ##    name: merge updates but do not commit yet
+      ##    command: git merge --no-commit default
 
       # Rsync Composer built directories into place (if they exist).
       # /tmp/web contains modules/, profiles/, and themes/ and they 
       # need to be synced to root so we sync the contents of /tmp/web/, 
       # not the folder.
-      - run: |
-          for dir in /tmp/vendor /tmp/drush /tmp/web/
-          do
-              DIR="$dir"
-              # If directory is not empty, rsync it.
-              if [ "$(ls -A $DIR)" ]; then
-                  rsync -rz ${dir} ./webspark-upstream
-              fi
-          done
+      ##- run: |
+      ##    for dir in /tmp/vendor /tmp/drush /tmp/web/
+      ##    do
+      ##        DIR="$dir"
+      ##        # If directory is not empty, rsync it.
+      ##        if [ "$(ls -A $DIR)" ]; then
+      ##            rsync -rz ${dir} ./webspark-upstream
+      ##        fi
+      ##    done
 
       # Do rsync in bash script in order to handle logic needed.
       #- run:
       #    name: rsync Composer built files into place
       #    command: bash ../.ci/deploy/asu/webspark-upstream
 
-      - run: |
-          git config user.email "mlsamuel@asu.edu"
-          git config user.name "CircleCI Job"
-          git add --all
-          git commit -am "CircleCI Upstream Merge - $CIRCLE_BRANCH - $CIRCLE_BUILD_NUM - $CIRCLE_USERNAME"
-          git push --set-upstream origin webspark-rc
+      ##- run: |
+      ##    git config user.email "mlsamuel@asu.edu"
+      ##    git config user.name "CircleCI Job"
+      ##    git add --all
+      ##    git commit -am "CircleCI Upstream Merge - $CIRCLE_BRANCH - $CIRCLE_BUILD_NUM - $CIRCLE_USERNAME"
+      ##    git push --set-upstream origin webspark-rc
 
       #    git push
 
