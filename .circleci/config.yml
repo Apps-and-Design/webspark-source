@@ -182,9 +182,13 @@ jobs:
 
       - run:
           name: clone webspark-upstream
-          command: git clone https://github.com/Apps-and-Design/webspark-upstream.git ./webspark-upstream
+          command: git clone https://github.com/Apps-and-Design/webspark-upstream.git ~/webspark-upstream
 
-      - run: cd webspark-upstream
+      - run: ls
+      
+      - run: pwd
+
+      - run: cd ~/webspark-upstream
       
       - run:
           name: checkout webspark-rc staging branch
