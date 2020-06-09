@@ -224,7 +224,7 @@ jobs:
               fi
           done
 
-      # Do rsync in bash script in order to handle logic needed. 
+      # Do rsync in bash script in order to handle logic needed.
       #- run:
       #    name: rsync Composer built files into place
       #    command: bash ../.ci/deploy/asu/webspark-upstream
