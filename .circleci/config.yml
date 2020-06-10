@@ -174,21 +174,21 @@ jobs:
 
       - run: 
           name: compress vendor artifacts 
-          command: tar -cvfz vendor.tar.gz /tmp/vendor 
+          command: tar -cfz vendor.tar.gz /tmp/vendor 
       - store_artifacts: 
           path: vendor.tar.gz 
           destination: vendor_artifact
           
       - run: 
           name: compress drush artifacts 
-          command: tar -cvfz drush.tar.gz /tmp/drush 
+          command: tar -cfz drush.tar.gz /tmp/drush 
       - store_artifacts: 
           path: drush.tar.gz 
           destination: drush_artifact
           
       - run: 
           name: compress web artifacts 
-          command: tar -cvfz web.tar.gz /tmp/web/ 
+          command: tar -cfz web.tar.gz /tmp/web/ 
       - store_artifacts: 
           path: web.tar.gz 
           destination: web_artifact
