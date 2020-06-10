@@ -172,16 +172,37 @@ jobs:
       - attach_workspace:
           at: /tmp
 
+      - run: 
+          name: compress vendor artifacts 
+          command: tar -cvfz vendor.tar.gz /tmp/vendor 
+      - store_artifacts: 
+          path: vendor.tar.gz 
+          destination: vendor_artifact
+          
+      - run: 
+          name: compress drush artifacts 
+          command: tar -cvfz drush.tar.gz /tmp/drush 
+      - store_artifacts: 
+          path: drush.tar.gz 
+          destination: drush_artifact
+          
+      - run: 
+          name: compress web artifacts 
+          command: tar -cvfz web.tar.gz /tmp/web/ 
+      - store_artifacts: 
+          path: web.tar.gz 
+          destination: web_artifact
 
-      - store_artifacts:
-          path: /tmp/vendor
-          destination: artifact-vendor
-      - store_artifacts:
-          path: /tmp/drush
-          destination: artifact-drush
-      - store_artifacts:
-          path: /tmp/web
-          destination: artifact-web
+
+      #- store_artifacts:
+      #    path: /tmp/vendor
+      #    destination: artifact-vendor
+      #- store_artifacts:
+      #    path: /tmp/drush
+      #    destination: artifact-drush
+      #- store_artifacts:
+      #    path: /tmp/web
+      #    destination: artifact-web
 
 
       # Add CircleCI RW deploy key so we can push to webspark-upstream repo.
